@@ -1,0 +1,7 @@
+client_secrets.json
+request.token
+intro.m4v
+outro.m4v
+output/*
+input/*
+.DS_Store

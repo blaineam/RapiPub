@@ -1,0 +1,13 @@
+version: '2.2'
+services:
+    web:
+        build: .
+        container_name: RapiPub
+        volumes:
+          - "./input:/data/media"
+          - "./client_secrets.json:/client_secrets.json"
+          - "./request.token:/request.token"
+          - "./intro.m4v:/data/resources/intro.m4v"
+          - "./outro.m4v:/data/resources/outro.m4v"
+          - "./output:/data/processed"
+        restart: always
