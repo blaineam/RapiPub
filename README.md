@@ -13,7 +13,7 @@ A Dockerized Rapid Social Media Video Processing and Publishing Micro Service
 
 ## Requirments
 
-* (https://github.com/porjo/youtubeuploader)[youtubeuploader]
+* [youtubeuploader](https://github.com/porjo/youtubeuploader)
 * ffmpeg
 * intro and outro in m4v format(for dockerized version only)
 * google developer console youtube data api v3 oauth credentials
