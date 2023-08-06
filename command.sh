@@ -8,6 +8,7 @@ OUTRO=$4
 RESOLUTION=$5
 CODEC=$6
 RATELIMIT=$7
+NOUPLOAD=$8
 find "$MEDIAPATH" -type f \( -iname \*.m4v -o -iname \*.mp4 -o -iname \*.mov  -o -iname \*.webm \) -print0 |
     while IFS= read -r -d '' video; do
         echo "Found video at: $video"
@@ -95,15 +96,18 @@ find "$MEDIAPATH" -type f \( -iname \*.m4v -o -iname \*.mp4 -o -iname \*.mov  -o
             echo "Leaving Video as is"
             cp "$video" "$output"
         fi
-        echo "Uploading Processed File to Youtube";
-        youtubeuploader -secrets ./client_secrets.json -cache ./request.token -notify=false -ratelimit $RATELIMIT -privacy private -filename "$output" || error=true
-        if [[ -n $error ]]; then
-            echo "Waiting till midnight"
-            eval "$(date +'h=%H m=%M s=%S')"
-            seconds=$((86400 - (${h#0} * 3600 + ${m#0} * 60 + ${s#0})))
-            echo "$seconds seconds to wait"
-            sleep $seconds
-            youtubeuploader -secrets ./client_secrets.json -cache ./request.token -notify=false -ratelimit $RATELIMIT -privacy private -filename "$output"
+
+        if [[ -z $NOUPLOAD ]]; then
+            echo "Uploading Processed File to Youtube";
+            youtubeuploader -secrets ./client_secrets.json -cache ./request.token -notify=false -ratelimit $RATELIMIT -privacy private -filename "$output" || error=true
+            if [[ -n $error ]]; then
+                echo "Waiting till midnight"
+                eval "$(date +'h=%H m=%M s=%S')"
+                seconds=$((86400 - (${h#0} * 3600 + ${m#0} * 60 + ${s#0})))
+                echo "$seconds seconds to wait"
+                sleep $seconds
+                youtubeuploader -secrets ./client_secrets.json -cache ./request.token -notify=false -ratelimit $RATELIMIT -privacy private -filename "$output"
+            fi
         fi
     done
 echo "Completed Processing Videos"
